@@ -28,7 +28,14 @@ public class UDPReceiver {
 	            socket.receive( packet ) ;
 
 	            System.out.println( packet.getAddress() + " " + packet.getPort() + ": " + new String(packet.getData()).trim() ) ;
-	        }  
+	            
+	            System.out.println( "ACK message");
+	            byte [] data = ("ACK:"+new String(packet.getData()).trim()).getBytes() ;
+	            DatagramPacket response = new DatagramPacket( data, data.length, packet.getAddress(), packet.getPort() ) ;
+	            socket.send( response ) ;
+	            
+	        }
+	        
 	     }
 	     catch( Exception e )
 	     {

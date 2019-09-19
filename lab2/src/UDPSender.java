@@ -1,14 +1,15 @@
 import java.net.*;
-import java.util.Scanner;
 
 public class UDPSender {
+	
+	private final static int PACKETSIZE = 100 ;
 
 	public static void main(String[] args) 
    {
 	      // Check the arguments
-	      if( args.length != 2 )
+	      if( args.length != 3 )
 	      {
-	         System.out.println( "usage: java UDPSender host port" ) ;
+	         System.out.println( "usage: java UDPSender host port messages" ) ;
 	         return ;
 	      }
 	      DatagramSocket socket = null ;
@@ -17,19 +18,22 @@ public class UDPSender {
 	         // Convert the arguments first, to ensure that they are valid
 	         InetAddress host = InetAddress.getByName( args[0] ) ;
 	         int port         = Integer.parseInt( args[1] ) ;
+	         int messages = Integer.parseInt(args[2]);
+	         
 	         socket = new DatagramSocket() ;
      
-	         Scanner in;
-	         in = new Scanner (System.in);
-	         String message = null;
-	         while (true)
+	         
+	         for (int i=0;i<=messages;i++)
 	         {
-	        		 System.out.println("Enter text to be sent, ENTER to quit ");
-	        		 message = in.nextLine();
-	        		 if (message.length()==0) break;
-	        		 byte [] data = message.getBytes() ;
+	        		 System.out.println("Sent Message"+String.valueOf(i));
+	        		 byte [] data = ("Message"+String.valueOf(i)).getBytes() ;
 	        		 DatagramPacket packet = new DatagramPacket( data, data.length, host, port ) ;
 	        		 socket.send( packet ) ;
+	        		 
+	        		 System.out.println( "Waiting for response..");
+	        		 DatagramPacket response=new DatagramPacket(new byte[PACKETSIZE], PACKETSIZE);
+	        		 socket.receive( response );
+	        		 System.out.println( response.getAddress() + " " + response.getPort() + ": " + new String(response.getData()).trim() ) ;
 	         } 
 	         System.out.println ("Closing down");
 	      }
