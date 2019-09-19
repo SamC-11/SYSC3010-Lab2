@@ -18,4 +18,8 @@ while True:
         break
     print ("Received %s bytes from %s %s: " % (len(buf), address, buf ))
 
+    print ("ACK message")
+    data="ACK:"+str(buf)
+    s.sendto(data.encode('utf-8'), (address[0],address[1]))
+
 s.shutdown(1)
